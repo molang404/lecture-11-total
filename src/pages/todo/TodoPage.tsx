@@ -1,12 +1,12 @@
 import { useState, type SubmitEvent, useEffect } from "react";
 import styled from "styled-components";
-import { FaPlus } from "react-icons/fa";
+import { FaCheck, FaPlus, FaTrash } from "react-icons/fa";
 
 type TodoType = {
     id: number;
     text: string;
     isCompleted: boolean;
-}
+};
 
 const Container = styled.div`
     max-width: 600px;
@@ -40,7 +40,7 @@ const StyledInput = styled.input`
     color: ${props => props.theme.colors.text.default};
     font-size: 16px;
     outline: none;
-    
+
     &:hover {
         border-color: ${props => props.theme.colors.primary};
     }
@@ -57,14 +57,63 @@ const AddButton = styled.button`
     align-items: center;
     justify-content: center;
     transition: all 0.5s;
-    
+
     &:hover {
         opacity: 0.9;
     }
-`
+`;
+
+const TodoList = styled.ul`
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+`;
+
+const TodoItem = styled.li<{ $isCompleted: boolean }>`
+    background-color: ${props => props.theme.colors.background.paper};
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 1px solid ${props => props.theme.colors.divider};
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.5s;
+
+    &:hover {
+        border-color: ${props => props.theme.colors.primary};
+    }
+
+    span {
+        flex: 1;
+        font-size: 16px;
+        color: ${props =>
+            props.$isCompleted
+                ? props.theme.colors.text.disabled
+                : props.theme.colors.text.default};
+        text-decoration: ${props => (props.$isCompleted ? `line-through` : `none`)};
+    }
+`;
+
+const IconButton = styled.button<{ $colorType: "success" | "error" }>`
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    opacity: 0.6;
+    transition: all 0.5s;
+    color: ${props => props.theme.colors[props.$colorType]};
+    // props.theme.colors에 존재하는 프로퍼티 키가 props.$colorType 인 값을 꺼내 오겠다.
+
+    &:hover {
+        opacity: 1;
+    }
+`;
 
 function TodoPage() {
-    const [inputValue, setInputValue] = useState("");  // input에 입력된 값 관리
+    const [inputValue, setInputValue] = useState(""); // input에 입력된 값 관리
     const [todos, setTodos] = useState<TodoType[]>(() => {
         // todos라는 state가 TodoPage 컴포넌트가 불러와질 때 마련되는데,
         // 그 저장소의 초기값은 이 함수에서 리턴된 값으로 결정됨
@@ -73,7 +122,7 @@ function TodoPage() {
         const storedTodos = localStorage.getItem("todos");
         return storedTodos ? JSON.parse(storedTodos) : [];
     }); // 할 일 목록 관리
-    
+
     const handleAddToDo = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!inputValue.trim()) return;
@@ -91,7 +140,19 @@ function TodoPage() {
         // 그 값을 localstorage에 저장하기 위해서는 JSON 형식으로 바꿔줄 필요가 있음
         localStorage.setItem("todos", JSON.stringify(todos));
     }, [todos]);
-    
+
+    const toggleTodo = (id: number) => {
+        setTodos(
+            todos.map(value => {
+                return value.id === id ? { ...value, isCompleted: !value.isCompleted } : value;
+            }),
+        );
+    };
+
+    const deleteTodo = (id: number) => {
+        setTodos(todos.filter(value => value.id !== id));
+    };
+
     return (
         <Container>
             <Title>Todo list</Title>
@@ -107,11 +168,19 @@ function TodoPage() {
                 </AddButton>
             </InputSection>
 
-            <ul>
+            <TodoList>
                 {todos.map((value, index) => (
-                    <li key={index}>{value.text}</li>
+                    <TodoItem key={index} $isCompleted={value.isCompleted}>
+                        <IconButton $colorType={"success"} onClick={() => toggleTodo(value.id)}>
+                            <FaCheck />
+                        </IconButton>
+                        <span>{value.text}</span>
+                        <IconButton $colorType={"error"} onClick={() => deleteTodo(value.id)}>
+                            <FaTrash />
+                        </IconButton>
+                    </TodoItem>
                 ))}
-            </ul>
+            </TodoList>
         </Container>
     );
 }
