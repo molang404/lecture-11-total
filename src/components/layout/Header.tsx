@@ -157,11 +157,11 @@ function Header() {
             <ThemeToggleButton onClick={toggleTheme}>
                 {theme === "light" ? (
                     <>
-                        <FaMoon size={16} /> 다크
+                        <FaMoon size={16} /> 라이트
                     </>
                 ) : (
                     <>
-                        <FaSun size={16} /> 라이트
+                        <FaSun size={16} /> 다크
                     </>
                 )}
             </ThemeToggleButton>
