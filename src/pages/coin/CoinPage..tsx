@@ -27,7 +27,7 @@ const Container = styled.div`
 
 function CoinPage() {
     const [coins, setCoins] = useState<CoinType[]>([]); // 목록 저장용
-    const [loading, setLoading] = useState(false); // 로딩 상태용
+    const [loading, setLoading] = useState(true); // 로딩 상태용
     const [selectedCoin, setSelectedCoin] = useState<CoinType | null>(null); // 사용자가 선택한 "그" 코인 정보를 저장하는 state
 
     useEffect(() => {

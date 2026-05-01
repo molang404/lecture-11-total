@@ -3,6 +3,8 @@ import MainLayout from "../layouts/MainLayout.tsx";
 import Home from "../pages/Home.tsx";
 import TodoPage from "../pages/todo/TodoPage.tsx";
 import CoinPage from "../pages/coin/CoinPage..tsx";
+import MoviePage from "../pages/movie/MoviePage.tsx";
+import MovieDetail from "../pages/movie/MovieDetail.tsx";
 
 const GetRouter = createBrowserRouter([
     {
@@ -12,6 +14,8 @@ const GetRouter = createBrowserRouter([
             { index: true, element: <Home /> }, // 주소가 "/"만 있다면, <Home />을 덧붙이고,
             { path: "todo", element: <TodoPage /> }, // 주소가 "/" + "to do"라면, <TodoPage />를 덧붙인다
             { path: "coin", element: <CoinPage /> },
+            { path: "movie", element: <MoviePage /> },
+            { path: "/movie/:id", element: <MovieDetail />}
         ],
     },
 ]);
