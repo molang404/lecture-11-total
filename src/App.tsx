@@ -7,26 +7,26 @@ import { ThemeContext, type ThemeType } from "./contexts/theme/ThemeContext.ts";
 import { useEffect, useState } from "react";
 
 function App() {
-    const [theme, setTheme] = useState<ThemeType>(() => {
-        const savedTheme = localStorage.getItem("theme");
-        return savedTheme === "dark" ? "dark" : "light";
-    });
+  const [theme, setTheme] = useState<ThemeType>(() => {
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme === "dark" ? "dark" : "light";
+  });
 
-    const toggleTheme = () => {
-        setTheme(prev => prev === "light" ? "dark" : "light");
-    };
+  const toggleTheme = () => {
+    setTheme(prev => prev === "light" ? "dark" : "light");
+  };
 
-    useEffect(() => {
-        localStorage.setItem("theme", theme);
-    }, [theme])
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme])
 
   return (
-      <ThemeContext.Provider value={{ theme, toggleTheme }}>
-          <ThemeProvider theme={theme === "light" ? LightTheme : DarkTheme}>
-              <GlobalStyle />
-              <RouterProvider router={GetRouter} />
-          </ThemeProvider>
-      </ThemeContext.Provider>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <ThemeProvider theme={theme === "light" ? LightTheme : DarkTheme}>
+        <GlobalStyle />
+        <RouterProvider router={GetRouter} />
+      </ThemeProvider>
+    </ThemeContext.Provider>
   );
 }
 
